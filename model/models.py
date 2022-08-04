@@ -7,7 +7,7 @@ class Users:
     """ Model User"""
     model = UserModel()
 
-    def __init__(self, name, account, email):
+    def __init__(self, name, email, account):
         self.name = name
         self.account = account
         self.email = email
@@ -44,7 +44,7 @@ class Transaction:
 
 
 async def main():
-    f = Users('Test3', 'test3@mail.ru', '3x0924s15112512b')
+    f = Users(name='Test4', email='test4@mail.ru', account='4x0924s15112512b')
     task = asyncio.create_task(f.create_profile())
     res = await asyncio.gather(task)
     return res[0]
