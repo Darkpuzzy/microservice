@@ -2,7 +2,7 @@ import sqlite3
 import datetime
 import asyncio
 
-URL_DB = '../mydata.db'
+URL_DB = '../../mydata.db'
 
 time = datetime.datetime.now()
 time_str = time.strftime('%Y-%m-%d %H:%m:%S')
@@ -10,6 +10,7 @@ time_str = time.strftime('%Y-%m-%d %H:%m:%S')
 connect = sqlite3.connect('../mydata.db')
 # // USE const 'FK_TRUE' for activate Foreign Keys in your db every time you call functions
 # // FK_TRUE = connect.execute("PRAGMA foreign_keys = true")
+
 
 def timet():
     now = datetime.datetime.now()
@@ -80,7 +81,7 @@ class UserModel:
     @staticmethod
     async def get_user_info(name, email):
         with connect as db:
-            query = db.execute(f""" SELECT name,email,account FROM users_bit WHERE name == '{name}' AND email == '{email}' """)
+            query = db.execute(f""" SELECT id,name,email,account FROM users_bit WHERE name == '{name}' AND email == '{email}' """)
             result = query.fetchall()
             db.commit()
             if result == []:
@@ -91,6 +92,7 @@ class UserModel:
 
 class TransactionsModel:
     """ NOT FUNNY ORM commands"""
+
     async def create_trns(self, account, balance, transactions, users_id):
         try:
             with connect as db:
@@ -147,20 +149,27 @@ def migrate():
         return 'ERROR: Tables already exists'
 
 
+""" TEST CONTROLLERS """
+
+
 async def main(*args):
     print(*args)
     user_c = UserModel()
     txr_m = TransactionsModel()
-    task2 = asyncio.create_task(txr_m.create_trns(account='2x0924s15112512b', balance='500', transactions='4x4b3e759bf4e3e47e27213c0e7709c470043f514d2a2cbb22f555540c5819fdc7', users_id=6))
+    # task2 = asyncio.create_task(txr_m.create_trns(
+    #     account='2x0924s15112512b',
+    #     balance='500',
+    #     transactions='4x4b3e759bf4e3e47e27213c0e7709c470043f514d2a2cbb22f555540c5819fdc7',
+    #     users_id=6))
     task1 = asyncio.create_task(user_c.create_user(*args))
     print(f'RES-1 answerd {timet()}')
     res1 = await asyncio.gather(task1)
-    res2 = await asyncio.gather(task2)
+    # res2 = await asyncio.gather(task2)
     task3 = asyncio.create_task(user_c.get_user_info(name='Test1', email='test1@mail.ru'))
     res3 = await asyncio.gather(task3)
-    print(res3[0])
+    print(res3[0][0])
     print('_________________________________________________')
-    return f'res1 is {res1[0]}\nres2 is {res2[0]}'
+    return f'res1 is {res1[0]}\nres3 is {res3[0][0]}'
 
 
 if __name__ == '__main__':
