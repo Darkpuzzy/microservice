@@ -24,7 +24,7 @@ class BitFunc:
 
 
 
-# address = '35PqpdHUQuURn9LdFyTNDLYkdkWM3w36PG' bc1qw8wrek2m7nlqldll66ajnwr9mh64syvkt67zlu 35PqpdHUQuURn9LdFyTNDLYkdkWM3w36PG
+# address = '35PqpdHUQuURn9LdFyTNDLYkdkWM3w36PG' bc1qw8wrek2m7nlqldll66ajnwr9mh64syvkt67zlu
 
 # Искать кошельки с транзакциями не больше 10 штук
 
