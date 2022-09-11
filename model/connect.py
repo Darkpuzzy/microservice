@@ -2,7 +2,7 @@ import sqlite3
 import datetime
 import asyncio
 
-URL_DB = '../../mydata.db'
+URL_DB = 'mydata.db'
 
 time = datetime.datetime.now()
 time_str = time.strftime('%Y-%m-%d %H:%m:%S')
@@ -144,6 +144,7 @@ def migrate():
     try:
         init_database()
         second_database()
+        connect.close()
         return 'Succefull migrations'
     except sqlite3.OperationalError:
         return 'ERROR: Tables already exists'
