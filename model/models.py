@@ -73,7 +73,7 @@ class Transaction:
 
 
 async def main():
-    task = asyncio.create_task(Users.create_profile(name='Test5', email='test5@mail.ru', account='5x0924s15112512b'))
+    task = asyncio.create_task(Users.create_profile(name='Test6', email='test6@mail.ru', account='6x0924s15112512b'))
     res = await asyncio.gather(task)
     task1 = asyncio.create_task(Users.get_model(name='Test4', email='test4@mail.ru'))
     res1 = await asyncio.gather(task1)
@@ -85,7 +85,7 @@ async def main():
         email='test4@mail.ru'
     ))
     res2 = await asyncio.gather(task2)
-    return res2
+    return res2, res1, res
 
 
 if __name__ == '__main__':
