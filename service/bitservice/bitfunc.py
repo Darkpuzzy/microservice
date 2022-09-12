@@ -5,21 +5,29 @@ import json
 
 class BitFunc:
 
-    async def get_info(self, email=None):
+    @classmethod
+    async def __get_adress(cls, name, email):
+        pass
+
+    @classmethod
+    async def get_info(cls, email=None):
         if email == None:
             return 'Please enter address wallet'
         else:
             # TODO запрос на информацию кошелек и баланс
             pass
 
-    async def get_full_info(self, email, address, name):
+    @classmethod
+    async def get_full_info(cls, email, name):
         pass
 
-    async def get_balance(self, address, value: str):
+    @classmethod
+    async def get_balance(cls, address, value: str):
         balanced = satoshi_to_currency(NetworkAPI.get_balance(address=address), value)
         return f'Your balance: {balanced} {value}'
 
-    async def get_txn(self, address):
+    @classmethod
+    async def get_txn(cls, address):
         txn = NetworkAPI.get_transactions(address)
 
 
