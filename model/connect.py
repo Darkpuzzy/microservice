@@ -56,7 +56,6 @@ class UserModel:
     """ Funny ORM commands """
 
     async def create_user(self, name, email, account):
-        print(f'RES-1 {timet()}')
         if await user_exist(mail=email) != None:
             return 'User with email already exist'
         else:
@@ -96,9 +95,10 @@ class TransactionsModel:
     async def create_trns(self, account, balance, transactions, users_id):
         try:
             with connect as db:
-                connect.execute("PRAGMA foreign_keys = true")
+                connect.execute("PRAGMA foreign_keys = true") # PRAGMA идет передача аргумента, дабы не настраивать в ручну отношение FK
                 transactions_date = (account, balance, transactions, time_str, users_id)
                 cursor = db.cursor()
+
                 cursor.execute(f""" INSERT INTO transactions (account, balance, transactions, Date, user_id) VALUES(?,?,?,?,?); """, transactions_date)
                 db.commit()
                 return 'OK'
@@ -110,16 +110,23 @@ class TransactionsModel:
 
     async def delete_trns(self, account):
         with connect as db:
+            # TODO добавить каскадное удаление или удаление последней транкзы
             cursor = db.cursor()
+
             cursor.execute(f""" DELETE FROM transactions WHERE account = '{account}' """)
+
             db.commit()
             return 'Successfully deleted!'
 
     @staticmethod
-    async def get_trns_info(account):
+    async def get_trns_info(account, user_id):
         with connect as db:
             cursor = db.cursor()
-            query_list = cursor.execute(f""" SELECT transactions,balance FROM transactions WHERE account = '{account}' """)
+
+            query_list = cursor.execute(
+                f""" SELECT transactions,balance FROM transactions 
+                WHERE user_id = '{user_id}' AND account = '{account}' """)
+
             result = query_list.fetchall()
             return result
 
