@@ -1,6 +1,6 @@
 import sqlite3
 import asyncio
-from connect import *
+from model.connect import UserModel, TransactionsModel
 
 
 class Users:

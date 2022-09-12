@@ -35,6 +35,8 @@ if __name__ == "__main__":
                         message = asyncio.run(parse_message(line2))
                         if message == '/get_txs':
                             print('YOUR LAST txs is ....')
+                        if message == '/get_user':
+                            print('Fully user info and all txs')
                         if message == '/quit':
                             stop_word2 = False
                             print('You in menu')

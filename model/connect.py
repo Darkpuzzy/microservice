@@ -2,12 +2,12 @@ import sqlite3
 import datetime
 import asyncio
 
-URL_DB = 'mydata.db'
+URL_DB = '../../mydata.db'
 
 time = datetime.datetime.now()
 time_str = time.strftime('%Y-%m-%d %H:%m:%S')
 
-connect = sqlite3.connect('../mydata.db')
+connect = sqlite3.connect('D:\projects\microservice\mydata.db')
 # // USE const 'FK_TRUE' for activate Foreign Keys in your db every time you call functions
 # // FK_TRUE = connect.execute("PRAGMA foreign_keys = true")
 
