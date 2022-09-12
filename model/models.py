@@ -50,26 +50,49 @@ class Transaction:
         pass
 
     @classmethod
-    async def _create_trn(cls, account, balance, trnx, name, email):
-        user_id = await asyncio.gather(
+    async def __get_user_id(cls, name, email):
+        get_user_id = await asyncio.gather(
             asyncio.create_task(
-                Users.get_model(
-                    name=name,
-                    email=email)))
+               Users.get_model(
+                   name=name,
+                   email=email)
+            )
+        )
+        result = get_user_id[0]
+        return result[0]
+
+    @classmethod
+    async def _create_trn(cls, account, balance, trnx, name, email):
+        user_id = await Transaction.__get_user_id(name=name, email=email)
         result = await asyncio.gather(
             asyncio.create_task(
                 cls.model.create_trns(
                     account=account,
                     balance=balance,
                     transactions=trnx,
-                    users_id=user_id[0][0]
+                    users_id=user_id
                 )
             )
         )
         return result[0]
 
-    async def get_trn(self):
+    @classmethod
+    async def get_all_trn(cls, account, name, email):
+        """ Taked all trn for user_id """
+        user_id = await Transaction.__get_user_id(name=name, email=email)
+        result = await cls.model.get_trns_info(account=account, user_id=user_id)
+        return result
+
+    @classmethod
+    async def get_trn(cls, account):
         pass
+
+# TODO User_id повторяется в моментах,
+#  нужно подумать о том что бы вынести как
+#  отдельную функцию вызова получения айдишника + распарсить
+
+
+"""TEST POINT"""
 
 
 async def main():
@@ -81,11 +104,12 @@ async def main():
         account='4x0924s15112512b',
         balance=320,
         trnx='6x4b3e759bf4e3e47e27213c0e7709c470043f514d2a2cbb22f555540c5819fdc7',
-        name='Test4',
-        email='test4@mail.ru'
+        name='Test7',
+        email='test7@mail.ru'
     ))
     res2 = await asyncio.gather(task2)
-    return res2, res1, res
+    res3 = await Transaction.get_all_trn(account='2x0924s15112512b', name='Test2', email='test2@mail.ru')
+    return res3[-1]
 
 
 if __name__ == '__main__':
