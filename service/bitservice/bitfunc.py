@@ -40,6 +40,11 @@ class BitFunc:
     async def get_txn(cls, name, email):
         address = await cls.__get_adress(name=name, email=email)
         txn = NetworkAPI.get_transactions(address)
+        if not txn:
+            return 'Transactions not exist'
+        else:
+            return txn[0]
+
 
 """ ПРИМЕР И ОБРАЗЕЦ """
 
