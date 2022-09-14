@@ -1,7 +1,7 @@
 import sqlite3
 import asyncio
 from model.connect import UserModel, TransactionsModel
-
+from bit.network import NetworkAPI, satoshi_to_currency
 
 class Users:
     """ Model User"""
@@ -89,8 +89,10 @@ class Transaction:
         user_id = await Transaction.__get_user_id(name=name, email=email)
         res1 = await user.get_user_info(name=name, email=email)
         res2 = await TransactionsModel.get_trns_info(account=account, user_id=user_id)
-        return f" USER INFO \n{res1}\n{res2} "
-
+        if res2 != []:
+            return f" USER INFO \n{res1}\n{res2} "
+        else:
+            return 'Enter correct adress or you dont have transactions'
 
 # TODO User_id повторяется в моментах,
 #  нужно подумать о том что бы вынести как
@@ -114,7 +116,7 @@ async def main():
     ))
     res2 = await asyncio.gather(task2)
     res3 = await Transaction.get_all_trn(account='2x0924s15112512b', name='Test2', email='test2@mail.ru')
-    return await Transaction.full_info(name='Test2', email='test2@mail.ru', account='2x0924s15112512b')
+    return await Transaction.full_info(name='Test3', email='test3@mail.ru', account='3x0924s15112512b')
 
 
 if __name__ == '__main__':
