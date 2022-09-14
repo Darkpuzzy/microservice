@@ -7,10 +7,10 @@ class Users:
     """ Model User"""
     model = UserModel()
 
-    def __init__(self, name, email, account):
-        self.name = name
-        self.account = account
-        self.email = email
+    # def __init__(self, name, email, account):
+    #     self.name = name
+    #     self.account = account
+    #     self.email = email
 
     @classmethod
     async def create_profile(cls, name, email, account):
@@ -41,10 +41,10 @@ class Transaction:
     model = TransactionsModel()
     User = Users
 
-    def __init__(self, account, transaction, user_id):
-        self.account = account
-        self.transaction = transaction
-        self.user_id = user_id
+    # def __init__(self, account, transaction, user_id):
+    #     self.account = account
+    #     self.transaction = transaction
+    #     self.user_id = user_id
 
     async def update_trn(self):
         pass
@@ -84,8 +84,13 @@ class Transaction:
         return result
 
     @classmethod
-    async def get_trn(cls, account):
-        pass
+    async def full_info(cls, name, email, account):
+        user = UserModel()
+        user_id = await Transaction.__get_user_id(name=name, email=email)
+        res1 = await user.get_user_info(name=name, email=email)
+        res2 = await TransactionsModel.get_trns_info(account=account, user_id=user_id)
+        return f" USER INFO \n{res1}\n{res2} "
+
 
 # TODO User_id повторяется в моментах,
 #  нужно подумать о том что бы вынести как
@@ -103,13 +108,13 @@ async def main():
     task2 = asyncio.create_task(Transaction._create_trn(
         account='4x0924s15112512b',
         balance=320,
-        trnx='6x4b3e759bf4e3e47e27213c0e7709c470043f514d2a2cbb22f555540c5819fdc7',
+        trnx='6x4b3e759bf4e3e47e27213c0e7709c470043f514d2a2cbb22f555540c5819fdc8',
         name='Test7',
         email='test7@mail.ru'
     ))
     res2 = await asyncio.gather(task2)
     res3 = await Transaction.get_all_trn(account='2x0924s15112512b', name='Test2', email='test2@mail.ru')
-    return res3[-1]
+    return await Transaction.full_info(name='Test2', email='test2@mail.ru', account='2x0924s15112512b')
 
 
 if __name__ == '__main__':
