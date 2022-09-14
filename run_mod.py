@@ -5,6 +5,7 @@ import os
 import sys
 from service.views import Get, Register
 from model.connect import migrate
+from bit.network import NetworkAPI, satoshi_to_currency
 
 ''' PARSE FUNCTION '''
 
@@ -29,7 +30,7 @@ if __name__ == "__main__":
             if message == '/reg':
                 stop = True
                 while stop:
-                    n = str(input('Enter name: '))
+                    n = str(input('Enter name: '))  #TODO позже опрокинуть в отдельную функцию
                     e = str(input('Enter email: '))
                     a = str(input('Enter account(address): '))
                     reg = asyncio.run(Register.reg(name=n, email=e, account=a))
@@ -42,17 +43,28 @@ if __name__ == "__main__":
                     for line2 in sys.stdin:
                         message2 = asyncio.run(parse_message(line2))
                         if message2 == '/get_txs':
-                            print('YOUR LAST txs is ....\n')
+                            while True:
+                                n = str(input('Enter name: '))
+                                e = str(input('Enter email: '))
+                                a = str(input('Enter account(address): '))
+                                v = str(input('Enter value (UST, BTC, ETC): '))
+                                result = asyncio.run(Get.txs(account=a, name=n, email=e, value=v))
+                                print(f'{result}\n')
+                                break
                         if message2 == '/get_user':
-                            print('Fully user info and all txs\n')
+                            n = str(input('Enter name: '))
+                            e = str(input('Enter email: '))
+                            a = str(input('Enter account(address): '))
+                            user_info = asyncio.run(Get.user_info(name=n, email=e, account=a))
+                            print(f'{user_info}\n')
                         if message2 == '/quit':
                             stop_word2 = False
-                            print('You in menu')
+                            print('You in menu\n')
                             break
 
             if message == '/run_db':
                 print(migrate())
-                print('Init databases')
+                print('Init databases\n')
             if message == '/stop':
                 print('\nStoped process successfully!')
                 stop_word = False
