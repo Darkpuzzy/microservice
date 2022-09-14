@@ -56,7 +56,7 @@ class UserModel:
     """ Funny ORM commands """
 
     async def create_user(self, name, email, account):
-        if await user_exist(mail=email) != None:
+        if await user_exist(mail=email) is not None:
             return 'User with email already exist'
         else:
             with connect as db:
@@ -94,14 +94,17 @@ class TransactionsModel:
 
     async def create_trns(self, account, balance, transactions, users_id):
         try:
-            with connect as db:
-                connect.execute("PRAGMA foreign_keys = true") # PRAGMA идет передача аргумента, дабы не настраивать в ручну отношение FK
-                transactions_date = (account, balance, transactions, time_str, users_id)
-                cursor = db.cursor()
+            if await tnx_exist(tnx=transactions) is None:
+                with connect as db:
+                    connect.execute("PRAGMA foreign_keys = true") # PRAGMA идет передача аргумента, дабы не настраивать в ручну отношение FK
+                    transactions_date = (account, balance, transactions, time_str, users_id)
+                    cursor = db.cursor()
 
-                cursor.execute(f""" INSERT INTO transactions (account, balance, transactions, Date, user_id) VALUES(?,?,?,?,?); """, transactions_date)
-                db.commit()
-                return 'OK'
+                    cursor.execute(f""" INSERT INTO transactions (account, balance, transactions, Date, user_id) VALUES(?,?,?,?,?); """, transactions_date)
+                    db.commit()
+                    return 'OK'
+            else:
+                return 'Transactions is exist in table'
         except sqlite3.IntegrityError:
             return 'ERROR: FOREIGN KEY constraint failed !!!'
 
@@ -131,19 +134,18 @@ class TransactionsModel:
             return result
 
 
-async def user_exist(mail=None):
+async def user_exist(mail):
     with connect as db:
         query_set = db.execute(f""" SELECT email FROM users_bit WHERE email == '{mail}' """)
         result = query_set.fetchone()
         return result
 
 
-async def full_info(name, email, account):
-    user = UserModel()
-    txr = TransactionsModel
-    res1 = user.get_user_info(name=name, email=email)
-    res2 = txr.get_trns_info(account=account)
-    return f" USER INFO \n{res1}\n{res2} "
+async def tnx_exist(tnx):
+    with connect as db:
+        query_set = db.execute(f""" SELECT transactions FROM transactions WHERE transactions == '{tnx}' """)
+        result = query_set.fetchone()
+        return result
 
 
 def migrate():
@@ -177,8 +179,7 @@ async def main(*args):
     res3 = await asyncio.gather(task3)
     print(res3[0][0])
     print('_________________________________________________')
-    return f'res1 is {res1[0]}\nres3 is {res3[0][0]}'
-
+    return res3
 
 if __name__ == '__main__':
     print(f'STARTED {timet()}')
