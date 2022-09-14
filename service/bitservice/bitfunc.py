@@ -1,6 +1,4 @@
 from bit.network import NetworkAPI, satoshi_to_currency
-from model.connect import full_info
-import json
 import asyncio
 from model import models
 
@@ -52,24 +50,24 @@ class BitFunc:
 
 # Искать кошельки с транзакциями не больше 10 штук
 
-address = '35PqpdHUQuURn9LdFyTNDLYkdkWM3w36PG'
-
-# TODO получение баланса
-s = satoshi_to_currency(NetworkAPI.get_balance(address), 'usd')
-print(s + ' usd')
-print(type(s))
-
-# TODO получение остатка с транзакции
-j = NetworkAPI.get_unspent(address)
-print(j)
-
-# TODO получение хэшэй транзакций
-f = NetworkAPI.get_transactions(address)
-print(f)
+# address = '35PqpdHUQuURn9LdFyTNDLYkdkWM3w36PG'
+#
+# # TODO получение баланса
+# s = satoshi_to_currency(NetworkAPI.get_balance(address), 'usd')
+# print(s + ' usd')
+# print(type(s))
+#
+# # TODO получение остатка с транзакции
+# j = NetworkAPI.get_unspent(address)
+# print(j)
+#
+# # TODO получение хэшэй транзакций
+# f = NetworkAPI.get_transactions(address)
+# print(f)
 
 
 """ TEST POINT """
 
 if __name__ == '__main__':
-    f = asyncio.run(BitFunc._get_adress(name='Test4',email='test4@mail.ru'))
-    print(f)
+    y = asyncio.run()
+    print(y)
