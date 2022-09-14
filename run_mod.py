@@ -1,11 +1,11 @@
-''' Import line '''
+""" Import line """
 
 import asyncio
 import os
 import sys
-import datetime
-import time
+from service.views import Get, Register
 from model.connect import migrate
+
 ''' PARSE FUNCTION '''
 
 
@@ -27,17 +27,25 @@ if __name__ == "__main__":
             if message == '/help':
                 print('\n| INFO FOR COMANDLINE |\n\n -/help - more info\n -/stop - stopped process\n -/run_db - init database\n')
             if message == '/reg':
-                pass
+                stop = True
+                while stop:
+                    n = str(input('Enter name: '))
+                    e = str(input('Enter email: '))
+                    a = str(input('Enter account(address): '))
+                    reg = asyncio.run(Register.reg(name=n, email=e, account=a))
+                    print(reg)
+                    print(f'Succes Name: {n} | Email: {e} | Account: {a}\n')
+                    stop = False
             if message == '/get_info':
                 stop_word2 = True
                 while stop_word2:
                     for line2 in sys.stdin:
-                        message = asyncio.run(parse_message(line2))
-                        if message == '/get_txs':
-                            print('YOUR LAST txs is ....')
-                        if message == '/get_user':
-                            print('Fully user info and all txs')
-                        if message == '/quit':
+                        message2 = asyncio.run(parse_message(line2))
+                        if message2 == '/get_txs':
+                            print('YOUR LAST txs is ....\n')
+                        if message2 == '/get_user':
+                            print('Fully user info and all txs\n')
+                        if message2 == '/quit':
                             stop_word2 = False
                             print('You in menu')
                             break
