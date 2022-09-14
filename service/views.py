@@ -1,4 +1,7 @@
 import asyncio
+from model.models import Users, Transaction
+
+
 # TODO довести вызовы к бд до одной строчки! Постараться сделать чистый код
 
 
@@ -24,4 +27,6 @@ class Register:
 
     @classmethod
     async def reg(cls, name, email, account):
-        pass
+        f = await Users.create_profile(name=name, email=email, account=account)
+        return f
+
